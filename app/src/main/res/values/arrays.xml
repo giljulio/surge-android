@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="categories_colors">
+        <item>@color/category_color_all</item>
+        <item>@color/category_color_comedy</item>
+        <item>@color/category_color_animals</item>
+        <item>@color/category_color_factual</item>
+        <item>@color/category_color_wow</item>
+        <item>@color/category_color_other</item>
+    </array>
+
+
+    <string-array name="categories_labels">
+        <item>All</item>
+        <item>Comedy</item>
+        <item>Animals</item>
+        <item>Factual</item>
+        <item>Wow</item>
+        <item>Other</item>
+    </string-array>
+</resources>
