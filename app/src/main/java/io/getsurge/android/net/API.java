@@ -19,7 +19,7 @@ public class API {
 
     private static final String TAG = API.class.getSimpleName();
 
-    private static final String ROOT_URL = "https://receipts-api.herokuapp.com/";
+    private static final String ROOT_URL = "https://surge-api.herokuapp.com/";
 
     private static final String PARAM_EMAIL = "email";
     private static final String PARAM_PASSWORD = "password";
@@ -44,7 +44,7 @@ public class API {
         }
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         Volley.getInstance(context).addToRequestQueue(new JsonObjectRequest(
-                Request.Method.POST, ROOT_URL + "users/", body, future, future), TAG);
+                Request.Method.POST, ROOT_URL + "users/authenticate", body, future, future), TAG);
 
         try {
             JSONObject response = future.get();

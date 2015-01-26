@@ -20,4 +20,5 @@
     <color name="category_color_animals">#009688</color>
     <color name="category_color_factual">#F44336</color>
     <color name="category_color_other">#607D8B</color>
+    <color name="light_grey">#E8E8E8</color>
 </resources>

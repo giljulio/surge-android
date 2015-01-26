@@ -3,12 +3,9 @@
 
     <string name="app_name">Surge</string>
     <string name="action_settings">Settings</string>
-
-
     <string name="drawer_open">Menu opened</string>
     <string name="drawer_close">Menu closed</string>
     <string name="action_search">Search</string>
-
     <string name="login_activity_username_label">Email</string>
     <string name="login_activity_password_label">Password</string>
     <string name="login_activity_ok_button">Done</string>
@@ -19,5 +16,8 @@
     <string name="login_activity_newaccount_text">Please enter email</string>
     <string name="ui_activity_title">Sign in</string>
     <string name="one_account_allowed">Only one account allowed at once. Please remove current account and try again.</string>
+    <string name="title_activity_laucher">LaucherActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_sign_in_have_an_account">Already registered?</string>
 
 </resources>

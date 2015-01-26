@@ -41,8 +41,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
-    private int mCurrentSelectedPosition;
-
+    private int mCurrentSelectedPosition = 1;
+    private NavigationDrawerAdapter mAdapter;
 
     @Nullable
     @Override
@@ -53,9 +53,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mDrawerList.setLayoutManager(layoutManager);
         mDrawerList.setHasFixedSize(true);
         final List<NavigationItem> navigationItems = getMenu();
-        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(navigationItems);
-        adapter.setNavigationDrawerCallbacks(this);
-        mDrawerList.setAdapter(adapter);
+        mAdapter = new NavigationDrawerAdapter(getActivity(), navigationItems);
+        mAdapter.setNavigationDrawerCallbacks(this);
+        mDrawerList.setAdapter(mAdapter);
         selectItem(mCurrentSelectedPosition);
         return view;
     }
@@ -125,9 +125,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("item 1"));
-        items.add(new NavigationItem("item 2"));
-        items.add(new NavigationItem("item 3"));
+        items.add(null);//Header
+        items.add(new NavigationItem("Surging", R.drawable.ic_trending_up_grey600_48dp));
+        items.add(new NavigationItem("New", R.drawable.ic_schedule_grey600_48dp));
+        items.add(new NavigationItem("Top", R.drawable.ic_assessment_grey600_48dp));
+        items.add(new NavigationItem("Controversial", R.drawable.ic_swap_vert_grey600_48dp));
+        items.add(new NavigationItem("Featured", R.drawable.ic_stars_grey600_48dp));
+        items.add(new NavigationItem("Favorites", R.drawable.ic_favorite_grey600_48dp ));
+        items.add(new NavigationItem("Settings", R.drawable.ic_settings_grey600_48dp));
         return items;
     }
 
@@ -181,5 +186,10 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
+    }
+
+    public void updateCurrentSection(int color) {
+        mAdapter.setSelectedColor(color);
+        mAdapter.notifyItemChanged(mAdapter.getSelectedPosition());
     }
 }

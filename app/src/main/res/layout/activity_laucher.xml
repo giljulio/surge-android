@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.getsurge.android.ui.LauncherActivity">
+
+    <io.getsurge.android.ui.SurgeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/launcher_surge_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:src="@drawable/surge_text_logo_thin_stroke"
+        android:alpha="0"
+        android:translationY="-40dp"/>
+</RelativeLayout>

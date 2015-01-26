@@ -6,8 +6,14 @@ package io.getsurge.android.model;
 public class NavigationItem {
     private String mText;
 
+    private int mThumbnail;
+
     public NavigationItem(String text) {
         mText = text;
+    }
+    public NavigationItem(String text, int thumbnail){
+        mText = text;
+        mThumbnail = thumbnail;
     }
 
     public String getText() {
@@ -16,5 +22,13 @@ public class NavigationItem {
 
     public void setText(String text) {
         mText = text;
+    }
+
+    public int getThumbnail() {
+        return mThumbnail;
+    }
+
+    public void setThumbnail(int mThumbnail) {
+        this.mThumbnail = mThumbnail;
     }
 }

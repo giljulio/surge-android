@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <LinearLayout style="@style/HeaderBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/toolbar_actionbar" />
-    </LinearLayout>
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
@@ -21,12 +14,14 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout style="@style/HeaderBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <include layout="@layout/toolbar_actionbar" />
                 <io.getsurge.android.ui.SlidingTabLayout
                     android:background="@color/tab_background"
                     android:id="@+id/sliding_tabs"
@@ -37,7 +32,8 @@
 
 
             <android.support.v4.view.ViewPager android:id="@+id/pager"
-                android:layout_width="match_parent" android:layout_height="match_parent" />
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="#E2E2E2"/>
         </LinearLayout>
         <fragment
             android:id="@+id/fragment_drawer"
@@ -45,6 +41,7 @@
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start|left"
-            app:layout="@layout/fragment_navigation_drawer"/>
+            app:layout="@layout/fragment_navigation_drawer"
+            tools:layout="@layout/fragment_navigation_drawer" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

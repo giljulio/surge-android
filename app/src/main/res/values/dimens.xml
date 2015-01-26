@@ -19,6 +19,6 @@
     <dimen name="text_size_diff_large_small">6sp</dimen>
     <dimen name="speaker_image_size">40dp</dimen>
 
-    <dimen name="navigation_drawer_width">240dp</dimen>
-    9
+    <dimen name="navigation_drawer_width">280dp</dimen>
+
 </resources>

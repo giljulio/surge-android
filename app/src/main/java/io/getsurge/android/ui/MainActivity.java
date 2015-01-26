@@ -9,11 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import io.getsurge.android.R;
 
@@ -52,6 +50,11 @@ public class MainActivity extends BaseActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
+
+        mViewPager.setPageMargin((int) px);
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
 
@@ -67,6 +70,7 @@ public class MainActivity extends BaseActivity {
         }
         ta.recycle();
 
+        mNavigationDrawerFragment.updateCurrentSection(categories_colors[0]);
         mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -75,6 +79,7 @@ public class MainActivity extends BaseActivity {
                         categories_colors[position == categories_colors.length - 1 ? position : position + 1]);
                 mSlidingTabLayout.setBackgroundColor(color);
                 mActionBarToolbar.setBackgroundColor(color);
+                mNavigationDrawerFragment.updateCurrentSection(color);
             }
 
             @Override
@@ -133,7 +138,7 @@ public class MainActivity extends BaseActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return VideoFeedFragment.newInstance(position + 1, "");
         }
 
         @Override
@@ -146,39 +151,6 @@ public class MainActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             return categories[position].toUpperCase(l);
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
         }
     }
 

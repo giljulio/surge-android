@@ -18,7 +18,7 @@ public class BaseActivity extends ActionBarActivity implements NavigationDrawerC
 
     protected Toolbar mActionBarToolbar;
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    protected NavigationDrawerFragment mNavigationDrawerFragment;
 
 
     protected Toolbar getActionBarToolbar() {
@@ -45,8 +45,9 @@ public class BaseActivity extends ActionBarActivity implements NavigationDrawerC
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mActionBarToolbar);
-
+        if(mNavigationDrawerFragment != null) {
+            mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mActionBarToolbar);
+        }
     }
 
 
@@ -57,7 +58,7 @@ public class BaseActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen())
+        if (mNavigationDrawerFragment != null && mNavigationDrawerFragment.isDrawerOpen())
             mNavigationDrawerFragment.closeDrawer();
         else
             super.onBackPressed();

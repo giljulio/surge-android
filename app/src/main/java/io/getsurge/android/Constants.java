@@ -20,12 +20,12 @@ public class Constants {
     /**
      * Account type string.
      */
-    public static final String ACCOUNT_TYPE = "com.receiptbin.android";
+    public static final String ACCOUNT_TYPE = "io.getsurge.android";
 
     /**
      * Authtoken type string.
      */
-    public static final String AUTHTOKEN_TYPE = "com.receiptbin.android";
+    public static final String AUTHTOKEN_TYPE = "io.getsurge.android";
 
     public static final boolean IS_DOGFOOD_BUILD = true;
 }

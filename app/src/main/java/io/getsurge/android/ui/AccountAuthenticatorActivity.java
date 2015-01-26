@@ -19,6 +19,7 @@ package io.getsurge.android.ui;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 /**
  * Base class for implementing an Activity that is used to help implement an

@@ -15,9 +15,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -63,13 +66,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     protected boolean mRequestNewAccount = false;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -79,12 +75,26 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mEmailSignInButton;
+
+    private boolean isRegistering;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAccountManager = AccountManager.get(this);
         setContentView(R.layout.activity_login2);
+
+        mActionBarToolbar.inflateMenu(R.menu.menu_login);
+        mActionBarToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                isRegistering = !isRegistering;
+                updateType(menuItem);
+                return true;
+            }
+        });
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -102,7 +112,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,6 +137,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         getLoaderManager().initLoader(0, null, this);
     }
 
+    private void updateType(MenuItem menuItem){
+        mActionBarToolbar.setTitle(!isRegistering ? R.string.action_sign_in_short : R.string.action_register_short);
+        mEmailSignInButton.setText(!isRegistering ? R.string.action_sign_in_short : R.string.action_register_short);
+        menuItem.setTitle(R.string.action_sign_in_have_an_account);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return true;
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
