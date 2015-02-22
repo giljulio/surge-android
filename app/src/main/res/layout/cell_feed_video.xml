@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginTop="12dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:elevation="2dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -15,13 +16,23 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:src="@drawable/sddefault"
+            android:background="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"/><!--should be a ratio of 1.78-->
+
+        <FrameLayout
+            android:id="@+id/video_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:tag="video_container_tag"/>
 
         <TextView
             android:id="@+id/cell_video_feed_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@drawable/black_gradient"
             style="?android:attr/textAppearanceLargeInverse"
             android:textSize="20sp"
             android:maxLines="2"
@@ -78,6 +89,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:paddingRight="16dp">
                 <ImageView
+                    android:id="@+id/cell_video_feed_up_vote_icon"
                     android:layout_width="32dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_keyboard_arrow_up_grey600_48dp"
@@ -86,6 +98,7 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"/>
                 <TextView
+                    android:id="@+id/cell_video_feed_up_vote_label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|left"
@@ -98,6 +111,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:paddingRight="16dp">
                 <ImageView
+                    android:id="@+id/cell_video_feed_down_vote_icon"
                     android:layout_width="32dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_keyboard_arrow_down_grey600_48dp"
@@ -106,6 +120,7 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"/>
                 <TextView
+                    android:id="@+id/cell_video_feed_down_vote_label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|left"

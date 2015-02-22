@@ -1,24 +1,39 @@
 package io.getsurge.android.ui;
 
 import android.animation.ArgbEvaluator;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
-import io.getsurge.android.R;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.Locale;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import io.getsurge.android.R;
+import io.getsurge.android.utils.ColorUtils;
+
 
 public class MainActivity extends BaseActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -35,21 +50,37 @@ public class MainActivity extends BaseActivity {
      */
     ViewPager mViewPager;
 
+    @InjectView(R.id.fab)
+    FloatingActionButton mFab;
+
     SlidingTabLayout mSlidingTabLayout;
     int[] categories_colors;
+
+    public static final String KEY_SORT = "sort";
+
+    private String mSort;
+
+    @InjectView(R.id.drawer)
+    DrawerLayout mDrawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        Intent intent = getIntent();
+        mSort = !intent.hasExtra(KEY_SORT) ? "surging" : intent.getStringExtra(KEY_SORT);
+
+
 
         Resources r = getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
@@ -70,16 +101,27 @@ public class MainActivity extends BaseActivity {
         }
         ta.recycle();
 
+        final Window window = getWindow();
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            mToolbarContainer.setPadding(0, getStatusBarHeight(), 0, 0);
+        }*/
+
         mNavigationDrawerFragment.updateCurrentSection(categories_colors[0]);
         mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("MainActivity", "onPageScroll: " + positionOffset) ;
                 int color = (int) new ArgbEvaluator().evaluate(positionOffset, categories_colors[position],
                         categories_colors[position == categories_colors.length - 1 ? position : position + 1]);
                 mSlidingTabLayout.setBackgroundColor(color);
                 mActionBarToolbar.setBackgroundColor(color);
                 mNavigationDrawerFragment.updateCurrentSection(color);
+                mFab.setColorNormal(color);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mDrawerLayout.setStatusBarBackgroundColor(ColorUtils.darker(color, 0.8F));
+                    mDrawerLayout.invalidate();
+               }
             }
 
             @Override
@@ -93,6 +135,63 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    public void setSort(String sort) {
+        this.mSort = sort;
+        if(mSectionsPagerAdapter != null) {
+            for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+                OnSortTypeChangedListener videoFeedFragment = mSectionsPagerAdapter.getItem(i);
+                videoFeedFragment.onSortChange(sort);
+            }
+            mSectionsPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    interface OnSortTypeChangedListener {
+        void onSortChange(String sort);
+    }
+
+    public String getSort() {
+        return mSort;
+    }
+
+    public FloatingActionButton getFab() {
+        return mFab;
+    }
+
+    public SlidingTabLayout getSlidingTabLayout() {
+        return mSlidingTabLayout;
+    }
+
+    @OnClick(R.id.fab)
+    public void addVideo(final View view){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+
+        float density = getResources().getDisplayMetrics().density;
+        float fabSize = 56 * density;
+        float marginSize = 16 * density;
+
+        int cx = (int) (screenWidth - (fabSize / 2) - marginSize);
+        int cy = (int) (screenHeight - (fabSize) - marginSize);
+        Intent intent = new Intent(MainActivity.this, AddVideoActivity.class);
+        intent.putExtra(AddVideoActivity.KEY_REVEAL_X_COORD, cx);
+        intent.putExtra(AddVideoActivity.KEY_REVEAL_Y_COORD, cy);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
 
@@ -135,10 +234,10 @@ public class MainActivity extends BaseActivity {
 
 
         @Override
-        public Fragment getItem(int position) {
+        public VideoFeedFragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return VideoFeedFragment.newInstance(position + 1, "");
+            return VideoFeedFragment.newInstance(position - 1, mSort, categories_colors[position]);
         }
 
         @Override
@@ -151,6 +250,11 @@ public class MainActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             return categories[position].toUpperCase(l);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 

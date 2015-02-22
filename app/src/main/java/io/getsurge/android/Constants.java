@@ -28,4 +28,6 @@ public class Constants {
     public static final String AUTHTOKEN_TYPE = "io.getsurge.android";
 
     public static final boolean IS_DOGFOOD_BUILD = true;
+
+    public static final String YOUTUBE_KEY = "AIzaSyDsmobolHUObv0yu5zokPNNH6QFMzooHg8";
 }

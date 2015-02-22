@@ -42,6 +42,10 @@ public class Volley {
             });
     }
 
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }
+
     public static synchronized Volley getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new Volley(context);

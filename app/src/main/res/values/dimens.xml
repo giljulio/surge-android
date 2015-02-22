@@ -19,6 +19,10 @@
     <dimen name="text_size_diff_large_small">6sp</dimen>
     <dimen name="speaker_image_size">40dp</dimen>
 
-    <dimen name="navigation_drawer_width">280dp</dimen>
+    <dimen name="navigation_drawer_width">290dp</dimen>
 
+
+    <!-- Floating Action Button (FAB) -->
+    <dimen name="fab_inner_circle_offset">8dp</dimen>
+    <dimen name="fab_action_icon_size">24dp</dimen>
 </resources>

@@ -1,0 +1,143 @@
+<io.codetail.widget.RevealFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.getsurge.android.ui.AddVideoActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/activity_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_actionbar"
+            app:titleTextAppearance="@style/ActionBar.TitleText"
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
+            android:background="@color/theme_primary"
+            android:elevation="4dp"
+            android:minHeight="56dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:orientation="vertical"
+                android:layout_marginRight="16dp">
+
+                <!-- Toolbar space -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp" />
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        style="@style/EditTextHeadline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:hint="Title"
+                        android:theme="@style/EditTextHeadlineTheme"/>
+
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
+                <!-- First divider space -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
+
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        style="@style/EditTextSubhead"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingTop="12dp"
+                        android:hint="URL"
+                        android:theme="@style/EditTextHeadlineTheme"/>
+
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
+                <!-- Second divider space -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@color/background_material_light">
+
+            <RelativeLayout
+                android:id="@+id/select_category_container"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <ImageView
+                    android:id="@+id/add_category_icon"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_group_work_grey600_48dp"
+                    android:padding="24dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="2"
+                    android:layout_toRightOf="@+id/add_category_icon">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Category"
+                        android:gravity="center_vertical"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp"/>
+                    <TextView
+                        android:id="@+id/select_category_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Animals"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--<com.melnykov.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_add_white_24dp"
+                app:fab_shadow="false"
+                app:fab_colorNormal="#2ecc71" />-->
+        </LinearLayout>
+    </LinearLayout>
+</io.codetail.widget.RevealFrameLayout>

@@ -1,47 +1,61 @@
-<LinearLayout
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+
+        <android.support.v4.view.ViewPager android:id="@+id/pager"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:background="#E2E2E2"/>
+
+        <LinearLayout style="@style/HeaderBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout style="@style/HeaderBar"
+            <include layout="@layout/toolbar_actionbar" />
+            <io.getsurge.android.ui.SlidingTabLayout
+                android:background="@color/tab_background"
+                android:id="@+id/sliding_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <include layout="@layout/toolbar_actionbar" />
-                <io.getsurge.android.ui.SlidingTabLayout
-                    android:background="@color/tab_background"
-                    android:id="@+id/sliding_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:layout_height="wrap_content" />
 
-            </LinearLayout>
-
-
-            <android.support.v4.view.ViewPager android:id="@+id/pager"
-                android:layout_width="match_parent" android:layout_height="match_parent"
-                android:background="#E2E2E2"/>
         </LinearLayout>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_colorNormal="@color/theme_primary" />
+    </FrameLayout>
+
+    <io.getsurge.android.ui.ScrimInsetsFrameLayout
+        android:id="@+id/scrimInsetsFrameLayout"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:elevation="10dp"
+        android:fitsSystemWindows="true"
+        app:insetForeground="#4000">
+
         <fragment
             android:id="@+id/fragment_drawer"
             android:name="io.getsurge.android.ui.NavigationDrawerFragment"
-            android:layout_width="@dimen/navigation_drawer_width"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start|left"
             app:layout="@layout/fragment_navigation_drawer"
-            tools:layout="@layout/fragment_navigation_drawer" />
-    </android.support.v4.widget.DrawerLayout>
-</LinearLayout>
+            tools:layout="@layout/fragment_navigation_drawer"/>
+    </io.getsurge.android.ui.ScrimInsetsFrameLayout>
+</android.support.v4.widget.DrawerLayout>

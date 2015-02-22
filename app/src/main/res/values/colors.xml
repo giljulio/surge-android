@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="theme_primary">#3f51b5</color>
-    <color name="theme_primary_dark">#303f9f</color>
-    <color name="theme_primary_light">#7986cb</color>
+    <color name="theme_primary">#607D8B</color>
+    <color name="theme_primary_dark">#ff4a606c</color>
+    <color name="theme_primary_light">#ff7fa2b3</color>
 
     <color name="theme_accent_1">#00b0ff</color>
     <color name="theme_accent_1_light">#8ad4fa</color>
+
+    <color name="theme_text_primary">#6F6F6F</color>
 
     <color name="tab_background">@color/theme_primary</color>
     <color name="tab_selected_strip">@android:color/white</color>
     <color name="theme_accent_2">#e91e63</color>
 
-    <color name="myDrawerBackground">#F2F2F2</color>
+    <color name="drawer_background">#F2F2F2</color>
 
 
     <color name="category_color_all">#03A9F4</color>
     <color name="category_color_comedy">#FF4081</color>
-    <color name="category_color_wow">#FFC107</color>
-    <color name="category_color_animals">#009688</color>
+    <color name="category_color_music">#FFC107</color>
+    <color name="category_color_animals">#795548</color>
+    <color name="category_color_sports">#009688</color>
     <color name="category_color_factual">#F44336</color>
     <color name="category_color_other">#607D8B</color>
     <color name="light_grey">#E8E8E8</color>

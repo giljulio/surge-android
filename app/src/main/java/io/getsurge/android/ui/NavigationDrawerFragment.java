@@ -1,9 +1,8 @@
 package io.getsurge.android.ui;
 
-/**
- * Created by Gil on 13/01/15.
- */
-
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -25,12 +24,14 @@ import io.getsurge.android.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.getsurge.android.model.DrawerHeader;
+import io.getsurge.android.model.DrawerItem;
 import io.getsurge.android.model.NavigationItem;
 
 /**
  * Created by poliveira on 24/10/2014.
  */
-public class NavigationDrawerFragment extends Fragment implements NavigationDrawerCallbacks {
+public class NavigationDrawerFragment extends Fragment implements NavigationDrawerCallbacks, OnAccountsUpdateListener {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREFERENCES_FILE = "my_app_settings"; //TODO: change this to your file
@@ -52,11 +53,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mDrawerList.setLayoutManager(layoutManager);
         mDrawerList.setHasFixedSize(true);
-        final List<NavigationItem> navigationItems = getMenu();
-        mAdapter = new NavigationDrawerAdapter(getActivity(), navigationItems);
+        final List<DrawerItem> navigationItems = getMenu();
+        mAdapter = new NavigationDrawerAdapter((BaseActivity) getActivity(), navigationItems);
         mAdapter.setNavigationDrawerCallbacks(this);
         mDrawerList.setAdapter(mAdapter);
-        selectItem(mCurrentSelectedPosition);
+        AccountManager.get(getActivity()).addOnAccountsUpdatedListener(this, null, true);
         return view;
     }
 
@@ -68,6 +69,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
+
     }
 
     @Override
@@ -115,6 +117,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         });
 
         mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -123,9 +126,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mCallbacks = null;
     }
 
-    public List<NavigationItem> getMenu() {
-        List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(null);//Header
+    public List<DrawerItem> getMenu() {
+        List<DrawerItem> items = new ArrayList<>();
+        items.add(new DrawerHeader(false));//Header
         items.add(new NavigationItem("Surging", R.drawable.ic_trending_up_grey600_48dp));
         items.add(new NavigationItem("New", R.drawable.ic_schedule_grey600_48dp));
         items.add(new NavigationItem("Top", R.drawable.ic_assessment_grey600_48dp));
@@ -191,5 +194,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     public void updateCurrentSection(int color) {
         mAdapter.setSelectedColor(color);
         mAdapter.notifyItemChanged(mAdapter.getSelectedPosition());
+    }
+
+    @Override
+    public void onAccountsUpdated(Account[] accounts) {
+        DrawerHeader drawerHeader = (DrawerHeader) mAdapter.getData().get(0);
+        if(accounts.length > 0) {
+            Account account = accounts[0];
+            drawerHeader.setSignedIn(true);
+            drawerHeader.setUsername(account.name);
+        } else {
+            drawerHeader.setSignedIn(false);
+            drawerHeader.setUsername(null);
+        }
+        mAdapter.notifyItemChanged(0);
     }
 }

@@ -2,15 +2,14 @@ package io.getsurge.android.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
+
 
 /**
  * Created by Gil on 18/01/15.
  */
-public class NineSixteenView extends ImageView {
+public class NineSixteenView extends FadeInNetworkImageView {
 
-    private static final double RATIO = 0.55;
+    private static final double RATIO = 0.56;
 
     public NineSixteenView(Context context) {
         super(context);

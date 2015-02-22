@@ -1,1 +1,1 @@
-include ':app', ':youtubesdk'
+include ':app', ':youtubesdk', ':circualreveal'

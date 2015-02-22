@@ -3,7 +3,7 @@ package io.getsurge.android.model;
 /**
  * Created by poliveira on 24/10/2014.
  */
-public class NavigationItem {
+public class NavigationItem extends DrawerItem {
     private String mText;
 
     private int mThumbnail;

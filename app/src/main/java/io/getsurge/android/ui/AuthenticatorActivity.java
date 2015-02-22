@@ -5,43 +5,38 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import io.getsurge.android.R;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import io.getsurge.android.Constants;
+import io.getsurge.android.R;
+import io.getsurge.android.model.AuthenticateResponse;
+import io.getsurge.android.model.GenericError;
 import io.getsurge.android.net.API;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class AuthenticatorActivity extends AccountAuthenticatorActivity implements LoaderCallbacks<Cursor> {
+public class AuthenticatorActivity extends AccountAuthenticatorActivity implements Response.Listener<AuthenticateResponse>, Response.ErrorListener {
 
     /** The tag used to log to adb console. */
     private static final String TAG = AuthenticatorActivity.class.getSimpleName();
@@ -68,16 +63,45 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+//    private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-    private Button mEmailSignInButton;
+    @InjectView(R.id.signin_user)
+    EditText mSignInUserView;
 
-    private boolean isRegistering;
+    @InjectView(R.id.signin_password)
+    EditText mSignInPasswordView;
+
+    @InjectView(R.id.signup_email)
+    EditText mSignUpEmailView;
+
+    @InjectView(R.id.signup_username)
+    EditText mSignUpUsernameView;
+
+    @InjectView(R.id.signup_password)
+    EditText mSignUpPasswordView;
+
+    @InjectView(R.id.login_progress)
+    View mProgressView;
+
+    @InjectView(R.id.login_form)
+    View mLoginFormView;
+
+    @InjectView(R.id.submit)
+    Button mSubmit;
+
+    private boolean isSigningUp;
+
+    @InjectView(R.id.is_registered)
+    TextView mIsRegisteredButton;
+
+    @InjectView(R.id.container_signin)
+    View mSignInContainer;
+
+    @InjectView(R.id.container_signup)
+    View mSignUpContainer;
+
+    Gson gson = new Gson();
 
 
     @Override
@@ -85,23 +109,19 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         super.onCreate(savedInstanceState);
         mAccountManager = AccountManager.get(this);
         setContentView(R.layout.activity_login2);
+        ButterKnife.inject(this);
 
-        mActionBarToolbar.inflateMenu(R.menu.menu_login);
-        mActionBarToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        mIsRegisteredButton.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                isRegistering = !isRegistering;
-                updateType(menuItem);
-                return true;
+            public void onClick(View v) {
+                isSigningUp = !isSigningUp;
+                updateType();
             }
         });
 
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        updateType();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mSignInPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -112,41 +132,29 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
             }
         });
 
-        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mSubmit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
-
         final Intent intent = getIntent();
         if(intent.getStringExtra(PARAM_EMAIL) != null) {
-            mEmailView.setText(intent.getStringExtra(PARAM_EMAIL));
+            mSignInUserView.setText(intent.getStringExtra(PARAM_EMAIL));
         } else {
             mRequestNewAccount = true;
         }
         mConfirmCredentials = intent.getBooleanExtra(PARAM_CONFIRM_CREDENTIALS, false);
     }
 
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
 
-    private void updateType(MenuItem menuItem){
-        mActionBarToolbar.setTitle(!isRegistering ? R.string.action_sign_in_short : R.string.action_register_short);
-        mEmailSignInButton.setText(!isRegistering ? R.string.action_sign_in_short : R.string.action_register_short);
-        menuItem.setTitle(R.string.action_sign_in_have_an_account);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
+    private void updateType(){
+        mActionBarToolbar.setTitle(!isSigningUp ? R.string.action_sign_in_short : R.string.action_register_short);
+        mSubmit.setText(!isSigningUp ? R.string.action_sign_in_short : R.string.action_register_short);
+        mIsRegisteredButton.setText(isSigningUp ? R.string.action_sign_in_have_an_account : R.string.action_register_an_account);
+        mSignInContainer.setVisibility(isSigningUp ? View.GONE : View.VISIBLE);
+        mSignUpContainer.setVisibility(!isSigningUp ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -155,17 +163,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (mAuthTask != null) {
+        /*if (mAuthTask != null) {
             return;
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        mSignInUserView.setError(null);
+        mSignInPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mSignInUserView.getText().toString();
+        String password = mSignInPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -173,19 +181,19 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            mSignInPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mSignInPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mSignInUserView.setError(getString(R.string.error_field_required));
+            focusView = mSignInUserView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mSignInUserView.setError(getString(R.string.error_invalid_email));
+            focusView = mSignInUserView;
             cancel = true;
         }
 
@@ -199,6 +207,19 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+        }*/
+        showProgress(true);
+        if(isSigningUp){
+            API.attemptSignUp(this,
+                    mSignUpUsernameView.getText().toString(),
+                    mSignUpEmailView.getText().toString(),
+                    mSignUpPasswordView.getText().toString(),
+                    this, this);
+        } else {
+            API.attemptSignIn(this,
+                    mSignInUserView.getText().toString(),
+                    mSignInPasswordView.getText().toString(),
+                    this, this);
         }
     }
 
@@ -249,64 +270,67 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
+    public void onResponse(AuthenticateResponse response) {
+        showProgress(false);
+        if (!mConfirmCredentials) {
+            finishLogin(response);
+        } else {
+            finishConfirmCredentials(true);
         }
 
-        addEmailsToAutoComplete(emails);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onErrorResponse(VolleyError volleyError) {
+        Log.e(TAG, volleyError.toString());
+        Log.d(TAG, "Network response is : " + String.valueOf(volleyError.networkResponse != null));
+        showProgress(false);
+        try {
+            String json = new String(
+                    volleyError.networkResponse.data,
+                    HttpHeaderParser.parseCharset(volleyError.networkResponse.headers));
+            Log.e(TAG, json);
+            GenericError error = gson.fromJson(json, GenericError.class);
 
-    }
+            if(isSigningUp) {
+                if (error.getType().equals("username-exists")) {
+                    mSignUpUsernameView.setError("Username already exists, please try another.");
+                    mSignUpUsernameView.requestFocus();
+                } else if (error.getType().equals("invalid-password")){
+                    mSignUpPasswordView.setError("Password must have at least 8 characters.");
+                    mSignUpPasswordView.requestFocus();
+                } else if (error.getType().equals("invalid-email")){
+                    mSignUpEmailView.setError("Email is invalid.");
+                    mSignUpEmailView.requestFocus();
+                } else if (error.getType().equals("invalid-username")){
+                    mSignUpUsernameView.setError("Invalid username (Tip: You cannot have any spaces)");
+                    mSignUpUsernameView.requestFocus();
+                } else if (error.getType().equals("email-exists")){
+                    mSignUpEmailView.setError("Email already exists");
+                    mSignUpEmailView.requestFocus();
+                } else if (error.getType().equals("username-exists")){
+                    mSignUpUsernameView.setError("Username already exists");
+                    mSignUpUsernameView.requestFocus();
+                }
+            } else {
+                if (error.getType().equals("incorrect-credentials")) {
+                    // "Please enter a valid username/password.
+                    mSignInUserView.setError(getString(R.string.login_activity_loginfail_text_both));
+                    mSignInUserView.requestFocus();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Couldn't get a response from the server", Toast.LENGTH_SHORT).show();
+        }
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(AuthenticatorActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
+    /*public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mEmail;
         private final String mPassword;
@@ -336,14 +360,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
                 Log.e(TAG, "onAuthenticationResult: failed to authenticate");
                 if (mRequestNewAccount) {
                     // "Please enter a valid username/password.
-                    mEmailView.setError(getString(R.string.login_activity_loginfail_text_both));
-                    mEmailView.requestFocus();
+                    mSignInUserView.setError(getString(R.string.login_activity_loginfail_text_both));
+                    mSignInUserView.requestFocus();
                 } else {
                     // "Please enter a valid password." (Used when the
                     // account is already in the database but the password
                     // doesn't work.)
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
+                    mSignInPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mSignInPasswordView.requestFocus();
                 }
             }
         }
@@ -353,7 +377,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
             mAuthTask = null;
             showProgress(false);
         }
-    }
+    }*/
 
 
     /**
@@ -365,8 +389,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
      */
     private void finishConfirmCredentials(boolean result) {
         Log.i(TAG, "finishConfirmCredentials()");
-        final Account account = new Account(mEmailView.getText().toString(), Constants.ACCOUNT_TYPE);
-        mAccountManager.setPassword(account, mPasswordView.getText().toString());
+        final Account account = new Account(mSignInUserView.getText().toString(), Constants.ACCOUNT_TYPE);
+        mAccountManager.setPassword(account, mSignInPasswordView.getText().toString());
         final Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_BOOLEAN_RESULT, result);
         setAccountAuthenticatorResult(intent.getExtras());
@@ -381,23 +405,25 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
      * authToken that's returned from the server as the 'password' for this
      * account - so we're never storing the user's actual password locally.
      *
-     * @param authToken the confirmCredentials result.
+     * @param response from the server.
      */
-    private void finishLogin(String authToken) {
+    private void finishLogin(AuthenticateResponse response) {
         Log.v(TAG, "finishLogin()");
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-        final Account account = new Account(email, Constants.ACCOUNT_TYPE);
+        String email = response.getUser().getEmail();
+        String password = isSigningUp ?
+                mSignUpPasswordView.getText().toString() : mSignInPasswordView.getText().toString();
+        final Account account = new Account("@" + response.getUser().getUsername(), Constants.ACCOUNT_TYPE);
         if (mRequestNewAccount) {
             Log.v(TAG, "New account");
             mAccountManager.addAccountExplicitly(account, password, null);
-
+            mAccountManager.setAuthToken(account, Constants.AUTHTOKEN_TYPE, response.getToken());
             //TODO(gil): this?
             //ContentResolver.setIsSyncable(account, ReceiptsContract.CONTENT_AUTHORITY, 1);
             // Set contacts sync for this account.
             //ContentResolver.setSyncAutomatically(account, ReceiptsContract.CONTENT_AUTHORITY, true);
         } else {
             mAccountManager.setPassword(account, password);
+            mAccountManager.setAuthToken(account, Constants.AUTHTOKEN_TYPE, response.getToken());
         }
         final Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
@@ -405,6 +431,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
         finish();
+        overridePendingTransition(R.anim.scale_up, R.anim.slide_down);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.scale_up, R.anim.slide_down);
+
     }
 }
 

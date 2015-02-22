@@ -8,48 +8,109 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by danieljulio on 27/10/2014.
  */
 public class GsonRequest<T> extends Request<T> {
-    private final Gson gson = new Gson();
-    private final Class<T> clazz;
-    private final Map<String, String> headers;
-    private final Response.Listener<T> listener;
-    private final boolean array;
-    private Map<String,String> body = null;
+
     private static final String TAG = GsonRequest.class.getSimpleName();
 
-    /**
-     * Make a GET request and return a parsed object from JSON.
-     *
-     * @param url URL of the request to make
-     * @param clazz Relevant class object, for Gson's reflection
-     * @param headers Map of request headers
-     */
-    public GsonRequest(String url, Class clazz, boolean array, Map<String, String> headers,
-                       Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, url, errorListener);
-        this.clazz = clazz;
-        this.headers = headers;
-        this.listener = listener;
-        this.array = array;
+    private final Gson gson = new Gson();
+
+    private final Class<T> clazz;
+    private final Map<String, String> headers;
+    private Map<String,String> body;
+    private final Response.Listener<T> listener;
+
+
+    public GsonRequest(Builder builder){
+        super(builder.method, builder.url, builder.errorListener);
+        clazz = builder.clazz;
+        headers = builder.headers;
+        listener = builder.successListener;
+        body = builder.body;
     }
-    public GsonRequest(int method, Map<String, String> body, String url, Class clazz, boolean array, Map<String, String> headers,
-                       Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        super(method, url, errorListener);
-        this.body = body;
-        this.clazz = clazz;
-        this.headers = headers;
-        this.listener = listener;
-        this.array = array;
+
+
+    public static class Builder {
+
+        private int method = Method.GET;
+        private String url;
+        private Class clazz;
+        private Response.Listener successListener;
+        private Response.ErrorListener errorListener;
+        private Map<String, String> headers;
+        private Map<String, String> body;
+
+        public Builder url(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder clazz(Class clazz) {
+            this.clazz = clazz;
+            return this;
+        }
+
+        public Builder successListener(Response.Listener successListener) {
+            this.successListener = successListener;
+            return this;
+        }
+
+        public Builder errorListener(Response.ErrorListener errorListener) {
+            this.errorListener = errorListener;
+            return this;
+        }
+
+        public Builder post() {
+            this.method = Method.POST;
+            return this;
+        }
+
+        public Builder method(int method) {
+            this.method = method;
+            return this;
+        }
+
+        public Builder addHeader(String key, String value){
+            if(headers == null)
+                headers = new HashMap<>();
+            headers.put(key, value);
+            return this;
+        }
+
+        public Builder headers(Map<String, String> headers){
+            this.headers = headers;
+            return this;
+        }
+
+        public Builder body(Map<String, String> body){
+            post();
+            this.body = body;
+            return this;
+        }
+
+        public Builder addBody(String key, String value){
+            if(body == null) {
+                body = new HashMap<>();
+                post();
+            }
+            body.put(key, value);
+            return this;
+        }
+
+        public GsonRequest build(){
+            return new GsonRequest(this);
+        }
     }
 
     @Override
@@ -74,10 +135,10 @@ public class GsonRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
 
-
-            if(array){
-                JsonParser parser = new JsonParser();
-                JsonArray array = (JsonArray) parser.parse(json);
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(json);
+            if(element.isJsonArray()){
+                JsonArray array = (JsonArray) element;
                 ArrayList elements = new ArrayList();
                 for (int i = 0; i < array.size(); i++) {
                     elements.add(gson.fromJson(array.get(i).toString(), clazz));

@@ -18,6 +18,9 @@
     <string name="one_account_allowed">Only one account allowed at once. Please remove current account and try again.</string>
     <string name="title_activity_laucher">LaucherActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_sign_in_have_an_account">Already registered?</string>
+    <string name="action_sign_in_have_an_account">Sign in</string>
+    <string name="action_register_an_account">Sign up</string>
+    <string name="prompt_username">Username</string>
+    <string name="title_activity_add_video">Post a video</string>
 
 </resources>

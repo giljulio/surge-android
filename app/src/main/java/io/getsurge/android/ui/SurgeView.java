@@ -3,15 +3,11 @@ package io.getsurge.android.ui;
 import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import io.getsurge.android.R;
@@ -49,7 +45,7 @@ public class SurgeView extends View {
         this.mHeight = h;
         super.onSizeChanged(w, h, oldw, oldh);
         mPaints[0] = new Paint();
-        mPaints[0].setColor(getResources().getColor(R.color.category_color_wow));
+        mPaints[0].setColor(getResources().getColor(R.color.category_color_music));
         mPaints[1] = new Paint();
         mPaints[1].setColor(getResources().getColor(android.R.color.holo_red_light));
         mPaints[1] = new Paint();
@@ -59,7 +55,7 @@ public class SurgeView extends View {
         mPaints[3] = new Paint();
         mPaints[3].setColor(getResources().getColor(R.color.category_color_comedy));
         mPaints[4] = new Paint();
-        mPaints[4].setColor(getResources().getColor(R.color.category_color_animals));
+        mPaints[4].setColor(getResources().getColor(R.color.category_color_sports));
         mPaints[5] = new Paint();
         mPaints[5].setColor(getResources().getColor(R.color.category_color_other));
         init();
