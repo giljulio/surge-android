@@ -1,0 +1,63 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!---Email Notifications-->
+    <!---Notifications-->
+    <!---Log out-->
+    <!---Rate us-->
+    <!---Support & feedback-->
+    <!---Open source libs-->
+    <!---Terms and conditions-->
+    <!---Privacy policy-->
+    <!---Version-->
+
+    <PreferenceCategory
+        android:title="My Account"
+        android:key="account">
+        <Preference
+            android:key="username"
+            android:title="Username"
+            android:summary="\@giljulio"
+            android:selectable="false"/>
+
+        <!--<CheckBoxPreference
+            android:key="notification_email"
+            android:title="Email"
+            android:summary="We also hate spam. Infrequent email updates"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="notification_push"
+            android:title="Push notifications"
+            android:summary="A few notifications a week"
+            android:defaultValue="true" />-->
+        <Preference
+            android:key="logout"
+            android:title="Log out"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="More information">
+        <Preference
+            android:key="rate_us"
+            android:title="Rate us"/>
+        <Preference
+            android:key="support"
+            android:title="Support &amp; feedback"/>
+        <Preference
+            android:key="open_source"
+            android:title="Open source libs"/>
+        <Preference
+            android:key="terms"
+            android:title="Terms and conditions"/>
+        <Preference
+            android:key="privacy"
+            android:title="Privacy policy"/>
+        <Preference
+            android:key="version"
+            android:title="Version"
+            android:summary="1.0.0"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

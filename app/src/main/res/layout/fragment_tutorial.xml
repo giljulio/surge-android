@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="100dp"
+    style="@style/dynamic_orientation"
+    tools:context="com.surge.android.ui.TutorialActivity.TutorialFragment">
+
+    <LinearLayout
+        style="@style/dynamic_orientation_child"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="48sp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:layout_marginTop="32dp"/>
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22sp"
+            android:gravity="center_horizontal"
+            android:padding="12dp"/>
+    </LinearLayout>
+    <ImageView
+        style="@style/dynamic_orientation_child"
+        android:id="@+id/page_image"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_gravity="top"
+        android:padding="32dp"/>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TransparentTheme.NoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="TransparentTheme.NoActionBar.NoNavigation" parent="@style/TransparentTheme.NoActionBar">
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+</resources>

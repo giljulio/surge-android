@@ -2,10 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.getsurge.android.ui.LauncherActivity"
-    android:fitsSystemWindows="true">
+    tools:context="com.surge.android.ui.LauncherActivity">
 
-    <io.getsurge.android.ui.SurgeView
+    <com.surge.android.ui.SurgeView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"/>

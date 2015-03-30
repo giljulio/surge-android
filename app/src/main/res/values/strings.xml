@@ -22,5 +22,21 @@
     <string name="action_register_an_account">Sign up</string>
     <string name="prompt_username">Username</string>
     <string name="title_activity_add_video">Post a video</string>
+    <string name="title_activity_profile">Profile</string>
 
+
+    <string name="title_uploads">Uploads</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_achievements">Achievements</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="best_videos">All the best videos in one place</string>
+    <string name="tutorial_2_title">Have your say</string>
+    <string name="tutorial_2_subtitle">Have a say on the top videos</string>
+
+    <string name="account_type" translatable="false">com.surge.android</string>
+    <string name="token_type" translatable="false">com.surge.android</string>
 </resources>

@@ -23,6 +23,7 @@
 
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="windowActionModeOverlay">true</item>
 
         <!--<item name="android:popupMenuStyle">@style/Widget.IOSched.PopupMenu</item>
         <item name="android:listPopupWindowStyle">@style/Widget.IOSched.PopupMenu</item>
@@ -35,6 +36,15 @@
 
 
     <style name="TransparentTheme" parent="@style/AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:windowIsFloating">true</item>-->
+        <!--<item name="android:backgroundDimEnabled">false</item>-->
+    </style>
+
+    <style name="TransparentTheme.NoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -163,11 +173,11 @@
 
     <style name="EditTextHeadline" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">#fff</item>
-        <item name="android:textColorHint">#33ffffff</item>
+        <item name="android:textColorHint">#a5ffffff</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
         <item name="android:inputType">textCapSentences</item>
 
-        <item name="colorControlNormal">#33ffffff</item>
+        <item name="colorControlNormal">#ffffff</item>
         <item name="colorControlActivated">@android:color/white</item>
         <item name="colorControlHighlight">@android:color/white</item>
         <item name="colorAccent">@android:color/white</item>
@@ -176,7 +186,7 @@
 
     <style name="EditTextSubhead" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">#fff</item>
-        <item name="android:textColorHint">#33ffffff</item>
+        <item name="android:textColorHint">#a5ffffff</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:inputType">textCapSentences</item>
     </style>
@@ -184,4 +194,12 @@
     <declare-styleable name="ScrimInsetsView">
         <attr name="insetForeground" format="reference|color" />
     </declare-styleable>
+
+    <style name="dynamic_orientation">
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="dynamic_orientation_child">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

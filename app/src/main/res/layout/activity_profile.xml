@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.surge.android.ui.ProfileActivity">
+
+    <android.support.v4.view.ViewPager android:id="@+id/pager"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="#E2E2E2"/>
+
+    <LinearLayout style="@style/HeaderBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/toolbar_actionbar" />
+        <com.surge.android.ui.SlidingTabLayout
+            android:background="@color/tab_background"
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</FrameLayout>

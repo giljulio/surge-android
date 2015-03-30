@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <include layout="@layout/toolbar_actionbar" />
-            <io.getsurge.android.ui.SlidingTabLayout
+            <com.surge.android.ui.SlidingTabLayout
                 android:background="@color/tab_background"
                 android:id="@+id/sliding_tabs"
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             app:fab_colorNormal="@color/theme_primary" />
     </FrameLayout>
 
-    <io.getsurge.android.ui.ScrimInsetsFrameLayout
+    <com.surge.android.ui.ScrimInsetsFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
@@ -51,11 +51,11 @@
 
         <fragment
             android:id="@+id/fragment_drawer"
-            android:name="io.getsurge.android.ui.NavigationDrawerFragment"
+            android:name="com.surge.android.ui.NavigationDrawerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start|left"
             app:layout="@layout/fragment_navigation_drawer"
             tools:layout="@layout/fragment_navigation_drawer"/>
-    </io.getsurge.android.ui.ScrimInsetsFrameLayout>
+    </com.surge.android.ui.ScrimInsetsFrameLayout>
 </android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Surge Debug</string>
+
+    <string name="account_type" translatable="false">com.surge.android.debug</string>
+    <string name="token_type" translatable="false">com.surge.android.debug</string>
+
+</resources>

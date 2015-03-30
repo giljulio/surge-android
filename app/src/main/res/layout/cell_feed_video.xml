@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <io.getsurge.android.ui.NineSixteenView
+        <com.surge.android.ui.NineSixteenView
             android:id="@+id/cell_video_feed_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="180dp"
@@ -56,14 +56,18 @@
         android:layout_height="54dp"
         android:orientation="horizontal">
         <LinearLayout
+            android:id="@+id/user_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp"
+            style="?android:attr/selectableItemBackground"
+            android:clickable="true">
             <TextView
+                android:id="@+id/uploader_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="\@gilsjulio"
@@ -71,6 +75,7 @@
                 android:gravity="center_vertical"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/uploader_points"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="34342"
